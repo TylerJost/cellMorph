@@ -25,3 +25,4 @@ __pycache__/
 !.gitkeep
 !data/experimentParams.txt
 .models.txt.swp
+zenodoUpload.py

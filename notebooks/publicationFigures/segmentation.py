@@ -38,7 +38,7 @@ factor = 200/322 #200 um/ 322 px
 pxIncrease = int(50/factor)
 imShape = im.shape
 
-imDisp[240:250, imShape[1]-pxIncrease-10:imShape[1]-10] = 0
+imDisp[240:241, imShape[1]-pxIncrease-10:imShape[1]-10] = 0
 plt.imshow(imDisp, cmap = 'gray')
 imsave('../../figures/publication/exemplar/patch.png', imDisp)
 # How you would quickly visualize this with detectron2:

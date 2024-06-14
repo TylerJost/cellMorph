@@ -74,7 +74,7 @@ pxIncrease = int(100/factor)
 initStart = 300
 initEnd = int(initStart+pxIncrease)
 untreatedHighContrast = untreatedHighContrast[0:int(axis1/amt), 0:int(axis2/amt)]
-untreatedHighContrast[310:330, initStart:initEnd] = 0
+untreatedHighContrast[310:315, initStart:initEnd] = 0
 # Make line for scale bar
 plt.imshow(untreatedHighContrast, cmap = 'gray')
 plt.axis('off')

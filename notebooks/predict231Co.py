@@ -25,6 +25,7 @@ parser.add_argument('--optimizer',  type = str, metavar='optimizer',   help = 'O
 parser.add_argument('--augmentation',  type = str, metavar='augmentation',   help = 'Image adjustment (None, blackoutCell, stamp)')
 parser.add_argument('--nIms',       type = int, metavar='augmentation',   help = 'Number of images the initial full image was split into (experiment dependent). 20x magnification: 16, 10x magnification: 4')
 parser.add_argument('--maxImgSize', type = int, metavar='maxImgSize', help = 'The final size of the image. If larger than the bounding box, pad with black, otherwise resize the image')
+parser.add_argument('--testWell', type = str, metavar='testWell', help = 'Well to include for testing')
 
 # This is for running the notebook directly
 args, unknown = parser.parse_known_args()
@@ -40,6 +41,7 @@ optimizer = 'sgd'
 augmentation = 'stamp'
 nIms = 16
 maxImgSize = 300
+testWell = 'C7'
 notes = 'Run on coculture wells only'
 
 modelID, idSource = modelTools.getModelID(sys.argv)
@@ -59,7 +61,8 @@ modelInputs = {
 'optimizer'     : optimizer, 
 'augmentation'  : augmentation,
 'nIms'          : nIms,
-'maxImgSize'    : maxImgSize
+'maxImgSize'    : maxImgSize,
+'testWell'      : testWell
 }
 
 argItems = vars(args)
@@ -69,7 +72,6 @@ for item, value in argItems.items():
         print(f'Replacing {item} value with {value}')
         modelInputs[item] = value
 modelDetailsPrint = modelTools.printModelVariables(modelInputs)
-
 # %%
 dataPath = Path(f'../data/{experiment}/raw/phaseContrast')
 datasetDictPath = Path(f'../data/{experiment}/split16/{experiment}DatasetDictNoBorderFull.npy')
@@ -82,7 +84,7 @@ dataloaders, dataset_sizes = makeImageDatasets(datasetDicts,
                                                dataPath,
                                                modelInputs
                                             )
-np.unique(dataloaders['train'].dataset.phenotypes, return_counts=True)
+np.unique(dataloaders['test'].dataset.phenotypes, return_counts=True)
 # %%
 inputs, classes = next(iter(dataloaders['train']))
 plt.subplot(121)
@@ -125,5 +127,6 @@ model = train_model(model,
                     dataset_sizes, 
                     modelSaveName,
                     resultsSaveName,
-                    num_epochs=modelInputs['num_epochs']
+                    num_epochs=modelInputs['num_epochs'],
+                    nImprove=5
                     )
